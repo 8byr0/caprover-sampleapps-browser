@@ -8,6 +8,33 @@ import CardMedia from "@mui/material/CardMedia"
 import Typography from "@mui/material/Typography"
 import { Badge, IconButton } from "@mui/material"
 import GitHubIcon from "@mui/icons-material/GitHub"
+import { Article } from "@mui/icons-material"
+
+const MoreInfoButton: React.FC<{ raw: string }> = ({ raw }) => {
+  const [url, setUrl] = React.useState("")
+  React.useEffect(() => {
+    if (!raw) return null
+    const urls = raw.match(/(https?:\/\/[^ ]*)/)
+    if (urls && urls[0]) {
+      setUrl(urls[0])
+    }
+  }, [raw])
+  const Icon = React.useMemo(() => {
+    if (url.includes("github.com")) return GitHubIcon
+    if (url.includes("docker.com")) return GitHubIcon
+    return Article
+  }, [url])
+  return (
+    <IconButton
+      onClick={() => {
+        window.open(url, "_blank")
+      }}
+      size="small"
+    >
+      <Icon />
+    </IconButton>
+  )
+}
 
 const AppCard = ({ item }) => {
   const modifiedTime = React.useMemo(() => {
@@ -89,9 +116,7 @@ const AppCard = ({ item }) => {
         </Typography>
       </CardContent>
       <CardActions>
-        <IconButton size="small">
-          <GitHubIcon />
-        </IconButton>
+        <MoreInfoButton raw={item.data.caproverOneClickApp.documentation} />
       </CardActions>
     </Card>
   )

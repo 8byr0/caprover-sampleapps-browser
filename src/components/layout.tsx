@@ -78,7 +78,7 @@ function ScrollTop(props: Props) {
 const Layout = ({ children }) => {
   const [filteredItems, setFilteredItems] = React.useState([])
   const [allItems, setAllItems] = React.useState([])
-  console.log("filtered", filteredItems)
+
   return (
     <SearchContext.Provider
       value={{

@@ -1,6 +1,7 @@
 # caprover-sampleapps-browser
 
-Public frontend to browse caprover sample apps
+Public frontend to browse caprover sample apps.
+[visit website](https://wizardly-ptolemy-8fcac8.netlify.app/)
 ![Sample Apps browser](/docs/homepage_screenshot.png)
 
 ## Introduction
@@ -11,15 +12,15 @@ I wanted a platform to:
 - know which new integrations have been added/updated
 - share this list to argue on the power of caprover
 
-All these informations are available on (sample apps)[repo https://github.com/caprover/one-click-apps], this browser is just a simple scrapper fetching data from github
+All these informations are available on [one click apps repo](https://github.com/caprover/one-click-apps), this browser is just a simple scrapper fetching data from github
 
 ## Under the hood
 
 This website uses `gatsby` to run. A standalone change detection instance is running to trigger build whenever something changes in the repo.
 
-- UI: (material ui)[https://github.com/mui-org/material-ui]
-- Data fetching: (gatsby-source-git)[https://github.com/stevetweeddale/gatsby-source-git] (locally patched version)
-- Frontend search: (fuse.js)[https://fusejs.io/]
+- UI: [material ui](https://github.com/mui-org/material-ui)
+- Data fetching: [gatsby-source-git](https://github.com/stevetweeddale/gatsby-source-git) (locally patched version)
+- Frontend search: [fuse.js](https://fusejs.io/)
 
 ## License
 

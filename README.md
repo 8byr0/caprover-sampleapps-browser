@@ -1,2 +1,3 @@
 # caprover-sampleapps-browser
-Public frontend to browse caprover sample apps 
+
+Public frontend to browse caprover sample apps

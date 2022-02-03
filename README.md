@@ -1,6 +1,7 @@
 # caprover-sampleapps-browser
 
 Public frontend to browse caprover sample apps
+![Sample Apps browser](/docs/homepage_screenshot.png)
 
 ## Introduction
 

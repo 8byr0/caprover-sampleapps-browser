@@ -7,7 +7,16 @@ import { GatsbyImage, getImage } from "gatsby-plugin-image"
 import { alpha, AppBar, debounce, InputBase } from "@mui/material"
 import SearchIcon from "@mui/icons-material/Search"
 import Fuse from "fuse.js"
-import { useSearchContext } from "../utils/search-context"
+import {
+  SortByOption,
+  SortDirection,
+  useSearchContext,
+} from "../utils/search-context"
+import {
+  sortAlphabetically,
+  sortByCreationDate,
+  sortByModificationDate,
+} from "../utils/sort"
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -64,20 +73,49 @@ export default function PersistentDrawerRight() {
       }
     }
   `)
-  const { allItems, setFilteredItems, setAllItems } = useSearchContext()
+  const { sortDirection, sortBy, allItems, setFilteredItems, setAllItems } =
+    useSearchContext()
 
   const fuse = React.useMemo(() => {
     return new Fuse(allItems, {
-      keys: ["data.caproverOneClickApp.displayName"],
+      keys: ["data.caproverOneClickApp.displayName", "created", "modified"],
+      ...(sortBy !== SortByOption.Score && {
+        sortFn: (a, b) => {
+          const asc = SortDirection.ASC === sortDirection
+          switch (sortBy) {
+            case SortByOption.Name: {
+              return sortAlphabetically(asc)(a, b)
+            }
+            case SortByOption.Creation: {
+              return sortByCreationDate(asc)(a, b)
+            }
+            case SortByOption.Modification: {
+              return sortByModificationDate(asc)(a, b)
+            }
+          }
+        },
+      }),
     })
-  }, [allItems])
+  }, [allItems, sortBy, sortDirection])
 
-  const onSearch = debounce(evt => {
+  const [lastQuery, setLastQuery] = React.useState("")
+
+  const onSearch = evt => {
     const queryText = evt.target.value
+    setLastQuery(queryText)
+
     if (!queryText) return setAllItems(allItems)
 
     setFilteredItems(fuse.search(queryText))
-  }, 300)
+  }
+
+  const onSearchDebounced = debounce(onSearch, 300)
+
+  React.useEffect(() => {
+    if (!lastQuery) return
+
+    onSearch({ target: { value: lastQuery } })
+  }, [sortBy, sortDirection])
 
   return (
     <AppBar position="fixed">
@@ -93,7 +131,7 @@ export default function PersistentDrawerRight() {
         <Typography variant="h6" noWrap sx={{ flexGrow: 1 }} component="div">
           Caprover one-click apps browser
         </Typography>
-        <Search onChange={onSearch}>
+        <Search onChange={onSearchDebounced}>
           <SearchIconWrapper>
             <SearchIcon />
           </SearchIconWrapper>

@@ -30,7 +30,8 @@
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-helmet": "^6.1.0",
-    "react-time-ago": "^7.1.9"
+    "react-time-ago": "^7.1.9",
+    "sort-array": "^4.1.4"
   },
   "devDependencies": {
     "prettier": "^2.5.1"

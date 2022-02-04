@@ -13,8 +13,8 @@ export enum SortDirection {
 }
 
 export const SearchContext = React.createContext({
-  sortBy: SortByOption.Name,
-  sortDirection: SortDirection.ASC,
+  sortBy: SortByOption.Modification,
+  sortDirection: SortDirection.DESC,
   filteredItems: [],
   allItems: [],
   setAllItems: items => {},

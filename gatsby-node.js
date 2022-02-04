@@ -50,6 +50,9 @@ exports.createPages = async ({ actions, graphql }) => {
         "utf-8"
       )
     )
+    if (ymlDoc.caproverOneClickApp.displayName === "") {
+      ymlDoc.caproverOneClickApp.displayName = edge.node.name.toUpperCase()
+    }
     apps[edge.node.name] = {
       // edge,
       data: ymlDoc,

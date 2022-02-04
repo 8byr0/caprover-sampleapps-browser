@@ -75,24 +75,29 @@ export default function PersistentDrawerRight() {
   `)
   const { sortDirection, sortBy, allItems, setFilteredItems, setAllItems } =
     useSearchContext()
-
+  const getSortFunction = React.useCallback(() => {
+    const asc = SortDirection.ASC === sortDirection
+    switch (sortBy) {
+      case SortByOption.Name: {
+        return sortAlphabetically(asc)
+      }
+      case SortByOption.Creation: {
+        return sortByCreationDate(asc)
+      }
+      case SortByOption.Modification: {
+        return sortByModificationDate(asc)
+      }
+      default: {
+        return (a, b) => 0
+      }
+    }
+  }, [sortBy, sortDirection])
   const fuse = React.useMemo(() => {
     return new Fuse(allItems, {
       keys: ["data.caproverOneClickApp.displayName", "created", "modified"],
       ...(sortBy !== SortByOption.Score && {
         sortFn: (a, b) => {
-          const asc = SortDirection.ASC === sortDirection
-          switch (sortBy) {
-            case SortByOption.Name: {
-              return sortAlphabetically(asc)(a, b)
-            }
-            case SortByOption.Creation: {
-              return sortByCreationDate(asc)(a, b)
-            }
-            case SortByOption.Modification: {
-              return sortByModificationDate(asc)(a, b)
-            }
-          }
+          return getSortFunction()(a, b)
         },
       }),
     })
@@ -112,9 +117,32 @@ export default function PersistentDrawerRight() {
   const onSearchDebounced = debounce(onSearch, 300)
 
   React.useEffect(() => {
-    if (!lastQuery) return
-
-    onSearch({ target: { value: lastQuery } })
+    if (!lastQuery) {
+      setFilteredItems(
+        allItems
+          .sort((a, b) => {
+            return getSortFunction()(
+              {
+                item: [
+                  { v: a.data.caproverOneClickApp.displayName },
+                  { v: a.created },
+                  { v: a.modified },
+                ],
+              },
+              {
+                item: [
+                  { v: b.data.caproverOneClickApp.displayName },
+                  { v: b.created },
+                  { v: b.modified },
+                ],
+              }
+            )
+          })
+          .map(itm => ({ item: itm }))
+      )
+    } else {
+      onSearch({ target: { value: lastQuery } })
+    }
   }, [sortBy, sortDirection])
 
   return (

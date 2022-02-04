@@ -11,13 +11,35 @@ import { useStaticQuery, graphql } from "gatsby"
 import TimeAgo from "javascript-time-ago"
 
 import en from "javascript-time-ago/locale/en.json"
-import ReactTimeAgo from "react-time-ago"
+import {
+  mdiSortCalendarAscending,
+  mdiCreation,
+  mdiSortAlphabeticalVariant,
+  mdiUpdate,
+  mdiSortAscending,
+} from "@mdi/js"
+import {
+  SortCalendarAscending,
+  Creation,
+  SortCalendarDescending,
+  SortAlphabeticalAscending,
+  SortAlphabeticalDescending,
+  SortClockAscending,
+  SortClockDescending,
+} from "mdi-material-ui"
+
+import Icon from "@mdi/react"
 
 TimeAgo.addDefaultLocale(en)
 
 import Header from "./header"
 import "./layout.css"
-import { ToggleButton, ToggleButtonGroup, ThemeProvider } from "@mui/material"
+import {
+  IconButton,
+  ToggleButton,
+  ToggleButtonGroup,
+  ThemeProvider,
+} from "@mui/material"
 import theme from "../theme"
 import AppBar from "@mui/material/AppBar"
 import Toolbar from "@mui/material/Toolbar"
@@ -84,6 +106,37 @@ function ScrollTop(props: Props) {
 const ResultsSort = () => {
   const { sortBy, sortDirection, setSortDirection, setSortBy } =
     useSearchContext()
+  const sortOptions = [
+    {
+      value: SortByOption.Score,
+      ascIcon: Creation,
+      descIcon: Creation,
+      canChangeDirection: false,
+      label: "Sort by search score",
+    },
+    {
+      value: SortByOption.Name,
+      ascIcon: SortAlphabeticalAscending,
+      descIcon: SortAlphabeticalDescending,
+      label: "Sort by name",
+      canChangeDirection: true,
+    },
+    {
+      value: SortByOption.Modification,
+      ascIcon: SortClockAscending,
+      descIcon: SortClockDescending,
+      label: "Sort by modification date",
+      canChangeDirection: true,
+    },
+    {
+      value: SortByOption.Creation,
+      ascIcon: SortCalendarAscending,
+      descIcon: SortCalendarDescending,
+      canChangeDirection: true,
+
+      label: "Sort by creation date",
+    },
+  ]
   return (
     <Box
       sx={{
@@ -93,32 +146,33 @@ const ResultsSort = () => {
         textAlign: "right",
       }}
     >
-      <ToggleButtonGroup
-        size="small"
-        aria-label="outlined primary button group"
-        exclusive
-        value={sortBy}
-        // @ts-ignore
-        onChange={event => setSortBy(event.target.value)}
-      >
-        <ToggleButton value={SortByOption.Score}>Score</ToggleButton>
-        <ToggleButton value={SortByOption.Name}>Name</ToggleButton>
-        <ToggleButton value={SortByOption.Modification}>
-          Modification
-        </ToggleButton>
-        <ToggleButton value={SortByOption.Creation}>Creation</ToggleButton>
-      </ToggleButtonGroup>
-      <ToggleButtonGroup
-        disabled={sortBy === SortByOption.Score}
-        size="small"
-        exclusive
-        aria-label="outlined primary button group"
-        value={sortDirection}
-        // @ts-ignore
-        onChange={event => setSortDirection(event.target.value)}
-      >
-        <ToggleButton value={SortDirection.ASC}>ASC</ToggleButton>
-        <ToggleButton value={SortDirection.DESC}>DESC</ToggleButton>
+      <ToggleButtonGroup size="small" aria-label="Sort configuration" exclusive>
+        {sortOptions.map((item, i) => {
+          return (
+            <ToggleButton
+              key={item.label}
+              value={item}
+              selected={sortBy === item.value}
+              onClick={() => {
+                if (sortBy === item.value && item.canChangeDirection) {
+                  setSortDirection(
+                    sortDirection === SortDirection.ASC
+                      ? SortDirection.DESC
+                      : SortDirection.ASC
+                  )
+                }
+                setSortBy(item.value)
+              }}
+              aria-label={item.label}
+            >
+              {sortDirection === SortDirection.ASC ? (
+                <item.ascIcon />
+              ) : (
+                <item.descIcon />
+              )}
+            </ToggleButton>
+          )
+        })}
       </ToggleButtonGroup>
     </Box>
   )
@@ -127,8 +181,8 @@ const ResultsSort = () => {
 const Layout = ({ children }) => {
   const [filteredItems, setFilteredItems] = React.useState([])
   const [allItems, setAllItems] = React.useState([])
-  const [sortDirection, setSortDirection] = React.useState(SortDirection.ASC)
-  const [sortBy, setSortBy] = React.useState(SortByOption.Name)
+  const [sortDirection, setSortDirection] = React.useState(SortDirection.DESC)
+  const [sortBy, setSortBy] = React.useState(SortByOption.Modification)
 
   return (
     <SearchContext.Provider

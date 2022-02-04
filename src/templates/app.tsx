@@ -151,31 +151,33 @@ const AppDetailsTemplate: React.FC<AppDetailsTemplateProps> = ({
               </Grid>
             </Box>
 
-            <Box>
-              <Typography gutterBottom variant="h5" component="div">
-                Variables
-              </Typography>
-              <Stack spacing={2}>
-                {appData.data.caproverOneClickApp.variables.map(variable => (
-                  <Box key={variable.id}>
-                    <Typography variant="body1">
-                      {variable.label}{" "}
-                      <Chip
-                        size="small"
-                        label={`Default: ${variable.defaultValue}`}
-                      />
-                    </Typography>
-                    <Typography variant="caption" color="text.secondary">
-                      {variable.id}
-                    </Typography>
-                    <br />
-                    <Typography variant="caption">
-                      {variable.description}
-                    </Typography>
-                  </Box>
-                ))}
-              </Stack>
-            </Box>
+            {appData.data.caproverOneClickApp.variables && (
+              <Box>
+                <Typography gutterBottom variant="h5" component="div">
+                  Variables
+                </Typography>
+                <Stack spacing={2}>
+                  {appData.data.caproverOneClickApp.variables.map(variable => (
+                    <Box key={variable.id}>
+                      <Typography variant="body1">
+                        {variable.label}{" "}
+                        <Chip
+                          size="small"
+                          label={`Default: ${variable.defaultValue}`}
+                        />
+                      </Typography>
+                      <Typography variant="caption" color="text.secondary">
+                        {variable.id}
+                      </Typography>
+                      <br />
+                      <Typography variant="caption">
+                        {variable.description}
+                      </Typography>
+                    </Box>
+                  ))}
+                </Stack>
+              </Box>
+            )}
           </Stack>
         </Grid>
       </Grid>

@@ -7,48 +7,19 @@
 
 import * as React from "react"
 import PropTypes from "prop-types"
-import { useStaticQuery, graphql } from "gatsby"
 import TimeAgo from "javascript-time-ago"
 
 import en from "javascript-time-ago/locale/en.json"
-import {
-  mdiSortCalendarAscending,
-  mdiCreation,
-  mdiSortAlphabeticalVariant,
-  mdiUpdate,
-  mdiSortAscending,
-} from "@mdi/js"
-import {
-  SortCalendarAscending,
-  Creation,
-  SortCalendarDescending,
-  SortAlphabeticalAscending,
-  SortAlphabeticalDescending,
-  SortClockAscending,
-  SortClockDescending,
-} from "mdi-material-ui"
-
-import Icon from "@mdi/react"
 
 TimeAgo.addDefaultLocale(en)
 
 import Header from "./header"
 import "./layout.css"
-import {
-  IconButton,
-  ToggleButton,
-  ToggleButtonGroup,
-  ThemeProvider,
-  Link,
-} from "@mui/material"
+import { ThemeProvider, Link } from "@mui/material"
 import theme from "../theme"
-import AppBar from "@mui/material/AppBar"
-import Toolbar from "@mui/material/Toolbar"
 import Typography from "@mui/material/Typography"
-import CssBaseline from "@mui/material/CssBaseline"
 import useScrollTrigger from "@mui/material/useScrollTrigger"
 import Box from "@mui/material/Box"
-import Container from "@mui/material/Container"
 import Fab from "@mui/material/Fab"
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp"
 import Zoom from "@mui/material/Zoom"
@@ -56,7 +27,6 @@ import {
   SearchContext,
   SortByOption,
   SortDirection,
-  useSearchContext,
 } from "../utils/search-context"
 
 interface Props {
@@ -104,82 +74,7 @@ function ScrollTop(props: Props) {
   )
 }
 
-const ResultsSort = () => {
-  const { sortBy, sortDirection, setSortDirection, setSortBy } =
-    useSearchContext()
-  const sortOptions = [
-    {
-      value: SortByOption.Score,
-      ascIcon: Creation,
-      descIcon: Creation,
-      canChangeDirection: false,
-      label: "Sort by search score",
-    },
-    {
-      value: SortByOption.Name,
-      ascIcon: SortAlphabeticalAscending,
-      descIcon: SortAlphabeticalDescending,
-      label: "Sort by name",
-      canChangeDirection: true,
-    },
-    {
-      value: SortByOption.Modification,
-      ascIcon: SortClockAscending,
-      descIcon: SortClockDescending,
-      label: "Sort by modification date",
-      canChangeDirection: true,
-    },
-    {
-      value: SortByOption.Creation,
-      ascIcon: SortCalendarAscending,
-      descIcon: SortCalendarDescending,
-      canChangeDirection: true,
-
-      label: "Sort by creation date",
-    },
-  ]
-  return (
-    <Box
-      sx={{
-        marginLeft: "auto",
-        marginTop: "10px",
-        marginBottom: "10px",
-        width: "fit-content",
-      }}
-    >
-      <ToggleButtonGroup size="small" aria-label="Sort configuration" exclusive>
-        {sortOptions.map((item, i) => {
-          return (
-            <ToggleButton
-              key={item.label}
-              value={item}
-              selected={sortBy === item.value}
-              onClick={() => {
-                if (sortBy === item.value && item.canChangeDirection) {
-                  setSortDirection(
-                    sortDirection === SortDirection.ASC
-                      ? SortDirection.DESC
-                      : SortDirection.ASC
-                  )
-                }
-                setSortBy(item.value)
-              }}
-              aria-label={item.label}
-            >
-              {sortDirection === SortDirection.ASC ? (
-                <item.ascIcon />
-              ) : (
-                <item.descIcon />
-              )}
-            </ToggleButton>
-          )
-        })}
-      </ToggleButtonGroup>
-    </Box>
-  )
-}
-
-const Layout = ({ children }) => {
+const Layout = ({ children, enableSearch = true }) => {
   const [filteredItems, setFilteredItems] = React.useState([])
   const [allItems, setAllItems] = React.useState([])
   const [sortDirection, setSortDirection] = React.useState(SortDirection.DESC)
@@ -203,7 +98,7 @@ const Layout = ({ children }) => {
     >
       <ThemeProvider theme={theme}>
         <span id="back-to-top-anchor" />
-        <Header />
+        <Header showSearchField={enableSearch} />
 
         <Box
           sx={{
@@ -213,7 +108,6 @@ const Layout = ({ children }) => {
             padding: `0 1.0875rem 1.45rem`,
           }}
         >
-          <ResultsSort />
           <main>{children}</main>
         </Box>
         <footer

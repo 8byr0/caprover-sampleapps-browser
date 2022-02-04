@@ -51,13 +51,15 @@ exports.createPages = async ({ actions, graphql }) => {
       )
     )
     if (ymlDoc.caproverOneClickApp.displayName === "") {
-      ymlDoc.caproverOneClickApp.displayName = edge.node.name.toUpperCase()
+      ymlDoc.caproverOneClickApp.displayName = edge.node.name
     }
     apps[edge.node.name] = {
       // edge,
       data: ymlDoc,
       modified: edge.node.modifiedTime,
       created: edge.node.birthTime,
+      slug: edge.node.name,
+      friendlyName: ymlDoc.caproverOneClickApp.displayName,
     }
   })
   data.pics.edges.forEach(edge => {
@@ -66,23 +68,46 @@ exports.createPages = async ({ actions, graphql }) => {
       cover: edge.node.publicURL,
     }
   })
-
+  const appsArray = Object.keys(apps).map(app => apps[app])
   createPage({
     path: "/",
     component: require.resolve("./src/templates/index.tsx"),
     context: {
-      apps: Object.keys(apps).map(app => apps[app]),
+      apps: appsArray,
     },
   })
+  function escapeRegExp(string) {
+    return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") // $& means the whole matched string
+  }
+  function replaceAll(str, match, replacement) {
+    return str.replace(new RegExp(escapeRegExp(match), "g"), () => replacement)
+  }
+  appsArray.forEach(element => {
+    createPage({
+      path: `/app/${element.slug}`,
+      component: require.resolve("./src/templates/app.tsx"),
+      context: {
+        appData: JSON.parse(
+          replaceAll(
+            replaceAll(JSON.stringify(element), "$$cap_appname", element.slug),
+            "$$cap_root_domain",
+            "captain.yourdomain.com"
+          )
+        ),
 
-  // ymlDoc.forEach(element => {
-  //   createPage({
-  //     path: element.path,
-  //     component: require.resolve("./src/templates/basicTemplate.js"),
-  //     context: {
-  //       pageContent: element.content,
-  //       links: element.links,
-  //     },
-  //   })
-  // })
+        similar: appsArray
+          .filter(
+            current =>
+              current.slug !== element.slug &&
+              (current.slug.startsWith(element.slug) ||
+                element.slug.startsWith(current.slug))
+          )
+          .map(app => ({
+            cover: app.cover,
+            name: app.friendlyName,
+            slug: app.slug,
+          })),
+      },
+    })
+  })
 }

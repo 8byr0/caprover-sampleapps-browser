@@ -68,7 +68,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     },
   },
 }))
-export default function PersistentDrawerRight() {
+export default function Header({ showSearchField = true }) {
   const data = useStaticQuery(graphql`
     query {
       cover: file(relativePath: { eq: "logo.png" }) {
@@ -190,15 +190,17 @@ export default function PersistentDrawerRight() {
             </Typography>
           </Stack>
           <div style={{ flexGrow: 1 }} />
-          <Search onChange={onSearchDebounced}>
-            <SearchIconWrapper>
-              <SearchIcon />
-            </SearchIconWrapper>
-            <StyledInputBase
-              placeholder="Search for a service…"
-              inputProps={{ "aria-label": "search" }}
-            />
-          </Search>
+          {showSearchField && (
+            <Search onChange={onSearchDebounced}>
+              <SearchIconWrapper>
+                <SearchIcon />
+              </SearchIconWrapper>
+              <StyledInputBase
+                placeholder="Search for a service…"
+                inputProps={{ "aria-label": "search" }}
+              />
+            </Search>
+          )}
           <IconButton
             href="https://github.com/8byr0/caprover-sampleapps-browser"
             target="_blank"

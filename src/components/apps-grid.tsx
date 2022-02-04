@@ -7,7 +7,7 @@ import { Skeleton, Stack } from "@mui/material"
 
 const LoadingCard = () => {
   return (
-    <Stack>
+    <Stack sx={{ flexGrow: 1 }}>
       <Skeleton height={250} />
       <Skeleton height={50} />
       <Skeleton />
@@ -29,23 +29,25 @@ const AppsGrid = ({ apps }) => {
   }, [filteredItems])
 
   return (
-    <Masonry
-      columns={{ md: 3, xs: 1, sm: 2 }}
-      spacing={2}
-      sx={{ margin: "auto" }}
-    >
+    <>
       {isLoading && (
-        <>
+        <Stack direction="row" sx={{ width: "100%" }} spacing={2}>
           <LoadingCard />
           <LoadingCard />
           <LoadingCard />
-        </>
+        </Stack>
       )}
-      {!isLoading &&
-        filteredItems.map(({ item }, idx) => (
-          <AppCard key={`app-card-${idx}`} item={item} />
-        ))}
-    </Masonry>
+      <Masonry
+        columns={{ md: 3, xs: 1, sm: 2 }}
+        spacing={2}
+        sx={{ margin: "auto" }}
+      >
+        {!isLoading &&
+          filteredItems.map(({ item }, idx) => (
+            <AppCard key={`app-card-${idx}`} item={item} />
+          ))}
+      </Masonry>
+    </>
   )
 }
 

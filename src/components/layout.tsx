@@ -39,6 +39,7 @@ import {
   ToggleButton,
   ToggleButtonGroup,
   ThemeProvider,
+  Link,
 } from "@mui/material"
 import theme from "../theme"
 import AppBar from "@mui/material/AppBar"
@@ -143,7 +144,7 @@ const ResultsSort = () => {
         marginLeft: "auto",
         marginTop: "10px",
         marginBottom: "10px",
-        textAlign: "right",
+        width: "fit-content",
       }}
     >
       <ToggleButtonGroup size="small" aria-label="Sort configuration" exclusive>
@@ -204,25 +205,47 @@ const Layout = ({ children }) => {
         <span id="back-to-top-anchor" />
         <Header />
 
-        <div
-          style={{
+        <Box
+          sx={{
             margin: `100px auto`,
+            marginTop: { xs: "185px", sm: "190px", md: "85px" },
             maxWidth: "1200px",
             padding: `0 1.0875rem 1.45rem`,
           }}
         >
           <ResultsSort />
           <main>{children}</main>
-          <footer
-            style={{
-              marginTop: `2rem`,
-            }}
-          >
+        </Box>
+        <footer
+          style={{
+            margin: "auto",
+            width: "100%",
+            maxWidth: "1200px",
+            padding: "0 1.0875rem 1.45rem",
+            textAlign: "center",
+          }}
+        >
+          <Typography color="text.secondary" variant="overline">
             © {new Date().getFullYear()}, Built with
             {` `}
-            <a href="https://www.gatsbyjs.com">Gatsby</a>
-          </footer>
-        </div>
+            <Link
+              color="primary.light"
+              href="https://www.gatsbyjs.com"
+              target="_blank"
+            >
+              Gatsby
+            </Link>
+            {" - "}
+            Source code available on{" "}
+            <Link
+              target="_blank"
+              color="primary.light"
+              href="https://github.com/8byr0/caprover-sampleapps-browser"
+            >
+              GitHub
+            </Link>
+          </Typography>
+        </footer>
         <ScrollTop>
           <Fab color="secondary" size="small" aria-label="scroll back to top">
             <KeyboardArrowUpIcon />

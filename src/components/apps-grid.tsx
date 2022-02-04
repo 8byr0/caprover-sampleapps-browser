@@ -20,6 +20,7 @@ const LoadingCard = () => {
 const AppsGrid = ({ apps }) => {
   const { filteredItems, setAllItems } = useSearchContext()
   const [isLoading, setLoading] = React.useState(true)
+
   React.useEffect(() => {
     setAllItems(apps)
   }, [apps])

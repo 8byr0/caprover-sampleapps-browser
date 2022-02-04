@@ -1,11 +1,13 @@
 import * as React from "react"
 import { styled } from "@mui/material/styles"
+import { Stack, IconButton } from "@mui/material"
 import Toolbar from "@mui/material/Toolbar"
 import Typography from "@mui/material/Typography"
 import { graphql, useStaticQuery } from "gatsby"
 import { GatsbyImage, getImage } from "gatsby-plugin-image"
 import { alpha, AppBar, debounce, InputBase } from "@mui/material"
 import SearchIcon from "@mui/icons-material/Search"
+import { GitHub } from "@mui/icons-material"
 import Fuse from "fuse.js"
 import {
   SortByOption,
@@ -56,6 +58,13 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
       "&:focus": {
         width: "30ch",
       },
+    },
+    [theme.breakpoints.down("sm")]: {
+      width: "100%",
+      // "&:focus": {
+      //   // paddingLeft: 0,
+      //   width: "100vw",
+      // },
     },
   },
 }))
@@ -147,27 +156,57 @@ export default function PersistentDrawerRight() {
 
   return (
     <AppBar position="fixed">
-      <Toolbar>
-        <GatsbyImage
-          style={{ marginRight: "10px" }}
-          // css={{ margin: `10px auto` }}
-          image={getImage(data.cover)}
-          loading="eager"
-          alt="Caprover logo"
-        />
+      <Toolbar
+        sx={{
+          justifyContent: "center",
+          maxWidth: "1200px",
+          width: "100%",
+          margin: "auto",
+        }}
+      >
+        <Stack
+          direction={{ md: "row", xs: "column" }}
+          sx={{ alignItems: "center", width: "100%" }}
+        >
+          <Stack
+            direction={{ md: "row", xs: "column" }}
+            sx={{ alignItems: "center", padding: "10px 0" }}
+          >
+            <GatsbyImage
+              style={{ marginRight: "10px" }}
+              // css={{ margin: `10px auto` }}
+              image={getImage(data.cover)}
+              loading="eager"
+              alt="Caprover logo"
+            />
 
-        <Typography variant="h6" noWrap sx={{ flexGrow: 1 }} component="div">
-          Caprover one-click apps browser
-        </Typography>
-        <Search onChange={onSearchDebounced}>
-          <SearchIconWrapper>
-            <SearchIcon />
-          </SearchIconWrapper>
-          <StyledInputBase
-            placeholder="Search for a service…"
-            inputProps={{ "aria-label": "search" }}
-          />
-        </Search>
+            <Typography
+              variant="h6"
+              noWrap
+              sx={{ flexGrow: 1 }}
+              component="div"
+            >
+              Caprover one-click apps browser
+            </Typography>
+          </Stack>
+          <div style={{ flexGrow: 1 }} />
+          <Search onChange={onSearchDebounced}>
+            <SearchIconWrapper>
+              <SearchIcon />
+            </SearchIconWrapper>
+            <StyledInputBase
+              placeholder="Search for a service…"
+              inputProps={{ "aria-label": "search" }}
+            />
+          </Search>
+          <IconButton
+            href="https://github.com/8byr0/caprover-sampleapps-browser"
+            target="_blank"
+            sx={{ color: "white" }}
+          >
+            <GitHub />
+          </IconButton>
+        </Stack>
       </Toolbar>
     </AppBar>
   )

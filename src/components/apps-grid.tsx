@@ -28,7 +28,11 @@ const AppsGrid = ({ apps }) => {
   }, [filteredItems])
 
   return (
-    <Masonry columns={{ md: 3, xs: 1, sm: 2 }} spacing={2}>
+    <Masonry
+      columns={{ md: 3, xs: 1, sm: 2 }}
+      spacing={2}
+      sx={{ margin: "auto" }}
+    >
       {isLoading && (
         <>
           <LoadingCard />
